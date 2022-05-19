@@ -1,0 +1,120 @@
+CREATE DATABASE IF NOT EXISTS agricultura;
+USE agricultura;
+
+CREATE TABLE IF NOT EXISTS arbol (
+tipo_arbol VARCHAR(20) PRIMARY KEY,
+numero_plantados TINYINT(5),
+fecha_plantacion DATE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS fecha (
+año YEAR PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS fruto (
+tipo_fruto VARCHAR(20) PRIMARY KEY,
+condicion BOOLEAN,
+fecha_maduracion DATE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS ofrece (
+tipo_fruto VARCHAR(20),
+tipo_arbol VARCHAR(20),
+año YEAR,
+beneficios_año INT(5),
+PRIMARY KEY (tipo_fruto, tipo_arbol, año),
+FOREIGN KEY (tipo_fruto) REFERENCES fruto(tipo_fruto),
+FOREIGN KEY (tipo_arbol) REFERENCES arbol(tipo_arbol),
+FOREIGN KEY (año) REFERENCES fecha(año)
+);
+
+CREATE TABLE IF NOT EXISTS agricultor (
+dni VARCHAR(9) PRIMARY KEY,
+especialidad VARCHAR(20),
+tierras VARCHAR(20) NOT NULL,
+nombre VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS cosecha (
+tipo_fruto VARCHAR(20) ,
+dni VARCHAR(9),
+PRIMARY KEY (tipo_fruto, dni),
+FOREIGN KEY (tipo_fruto) REFERENCES fruto(tipo_fruto),
+FOREIGN KEY (dni) REFERENCES agricultor(dni)
+);
+
+CREATE TABLE IF NOT EXISTS cuida (
+tipo_arbol VARCHAR(20),
+dni VARCHAR(9),
+PRIMARY KEY (tipo_arbol, dni),
+FOREIGN KEY (tipo_arbol) REFERENCES arbol(tipo_arbol),
+FOREIGN KEY (dni) REFERENCES agricultor(dni)
+);
+
+CREATE TABLE IF NOT EXISTS empresa (
+nif VARCHAR(9) PRIMARY KEY,
+especialidad VARCHAR(20),
+localidad VARCHAR(20) NOT NULL,
+nombre VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS vende (
+nif VARCHAR(20),
+dni VARCHAR(9),
+PRIMARY KEY (nif, dni),
+FOREIGN KEY (nif) REFERENCES empresa(nif),
+FOREIGN KEY (dni) REFERENCES agricultor(dni)
+);
+
+ 
+
+INSERT INTO arbol VALUES ('manzano', 15, '2018-08-11'),
+						 ('naranjo', 15, '2017-06-27'),
+                         ('mandarino', 10, '2018-05-22'),
+                         ('olivera', 5, '2018-04-09'),
+                         ('peral', 15, '2017-08-01');
+				
+INSERT INTO fecha VALUES ('2016'),
+						 ('2017'),
+                         ('2018'),
+                         ('2019'),
+                         ('2020');      
+                         
+INSERT INTO fruto VALUES ('manzana', 'buena', '2018-10-24'),
+						 ('naranja', 'buena', '2017-09-28'),
+                         ('mandarina', 'buena', '2018-09-13'),
+                         ('oliva', 'picada', '2018-07-22'),
+                         ('pera', 'pocha', '2017-10-16');                        
+                         
+INSERT INTO ofrece VALUES ('manzana', 'manzano', '2016', 2750),
+						 ('naranja', 'naranjo', '2017', 3000),
+                         ('mandarina', 'mandarino', '2018', 2000),
+                         ('oliva', 'olivera', '2019', 2500),
+                         ('pera', 'peral', '2020', 3000);   
+                         
+INSERT INTO agricultor VALUES ('98765723X', 'mandarina', '10000 ha^2', 'Roberto'),
+						 ('12345678J', 'manzana', '2000 ha^2', 'Judith'),
+                         ('87654321G', 'pera', '1000 ha^2', 'Cristian'),
+                         ('13245768S', 'oliva', '5500 ha^2', 'Paco'),
+                         ('86754231V', 'naranja', '4000 ha^2', 'Rosendo'); 
+				
+INSERT INTO cuida VALUES ('mandarino','98765723X'),
+						 ('manzano','12345678J'),
+                         ('peral','87654321G'),
+                         ('olivera','13245768S'),
+                         ('naranjo','86754231V');    
+                         
+INSERT INTO empresa VALUES ('18723645P', 'manzana', 'Jaen', 'Marlene'),
+						 ('45362718A', 'naranja', 'Tarragona', 'Acid Orange'),
+                         ('12387645Ñ', 'mandarina', 'Sabadell', 'Mandarin'),
+                         ('87632145Q', 'oliva', 'Sarral', 'Portell'),
+                         ('67812345O', 'pera', 'Soria', 'PerePera');  
+                         
+INSERT INTO vende VALUES ('12387645Ñ','98765723X'),
+						 ('18723645P','12345678J'),
+                         ('67812345O','87654321G'),
+                         ('87632145Q','13245768S'),
+                         ('45362718A','86754231V'); 
+                         
+ALTER TABLE fruto MODIFY condicion VARCHAR (10);
+
